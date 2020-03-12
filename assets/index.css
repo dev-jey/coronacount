@@ -12,12 +12,13 @@ body {
   padding: 1rem;
 }
 
-header,
+h1,
 section {
   color: #cfcfcf;
 }
 
-header {
+h1 {
+  text-align: center;
   font-size: 4rem;
   font-family: "Roboto Condensed", sans-serif;
   height: 200px;
@@ -37,6 +38,7 @@ header {
   display: -ms-grid;
   display: grid;
   place-items: center;
+  padding: 1rem;
 }
 
 .section-stats {
@@ -70,8 +72,8 @@ header {
 }
 
 @media screen and (min-width: 768px) {
-  header {
-    text-align: center;
+  h1 {
+    text-align: left;
     height: 120px;
   }
   .section {
