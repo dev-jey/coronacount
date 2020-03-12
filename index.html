@@ -1,18 +1,73 @@
 <!DOCTYPE html>
 <!-- Microdata markup added by Google Structured Data Markup Helper. -->
-<html lang="en"><head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <meta name="description" content="This is a portal where you can access all the latest and updated corona virus or Covid 19 statistics from China and the rest of the world."/>
-    <link rel="icon" href="../coronacount/images/icon.ico"/>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description"
+        content="This is a portal where you can access all the latest and updated corona virus or Covid 19 statistics from China and the rest of the world." />
+    <link rel="icon" href="../coronacount/images/icon.ico" />
     <title>World Current Corona Statistics</title>
+    <link rel="stylesheet" href="./assets/index.css">
 </head>
+
 <body>
-<span itemscope itemtype="http://schema.org/Event">
-    
-<span itemprop="name">Corona Virus</span>
+    <header>
+        CORONA STATISTICS
+    </header>
+    <section class="section">
+        <div class="section-map">
+            MAP
+        </div>
+        <aside class="section-stats">
+            <div class="section-stats__holder">
+                <div class="counter" data-target="500">
+                    0
+                </div>
+                <p>Deaths</p>
+            </div>
+            <div class="section-stats__holder">
+                <div class="counter" data-target="9000">
+                    0
+                </div>
+                <p>Cases</p>
+            </div>
+            <div class="section-stats__holder">
+                <div class="counter" data-target="100">
+                    0
+                </div>
+                <p>Survivors</p>
+            </div>
+        </aside>
+    </section>
+</body>
+<script>
 
-    
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
 
-</span></body></html>
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+
+            const inc = target / speed;
+            if (count < target) {
+                counter.innerHTML = Math.ceil(count + inc);
+
+                console.log(counter.innerHTML)
+                setTimeout(updateCount, 1);
+            } else {
+                count.innerHTML = target;
+            }
+        }
+
+        updateCount();
+    })
+
+
+</script>
+
+</html>

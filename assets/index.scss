@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Baloo Chettan 2", cursive;
+  background-color: #001a03;
+  background-image: url("https://www.transparenttextures.com/patterns/beige-paper.png");
+}
+
+body {
+  padding: 1rem;
+}
+
+header,
+section {
+  color: rgb(207, 207, 207);
+}
+header {
+  font-size: 4rem;
+  font-family: "Roboto Condensed", sans-serif;
+  height: 200px;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: 1fr;
+  height: calc(100vh - 145px);
+  &-map {
+    background: rgba(214, 214, 214, 0.5);
+    color: rgb(52, 73, 52);
+    display: grid;
+    place-items: center;
+  }
+  &-stats {
+    display: grid;
+    grid-template-rows: repeat(1fr);
+    gap: 1rem;
+    place-items: center;
+    &__holder{
+        color: rgb(184, 184, 184);
+    }
+    .counter {
+      width: 100%;
+      display: grid;
+      font-size: 4rem;
+      font-family: "Roboto Condensed", sans-serif;
+      place-items: center;
+      height: 100%;
+      text-align: center;
+      font-size: 4rem;
+      font-weight: bolder;
+    }
+
+    p {
+      text-align: center;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  header {
+    text-align: center;
+    height: 120px;
+  }
+  .section {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+  }
+}
