@@ -256,7 +256,7 @@
         $scope.getStats = () => {
             $http({
                 method: 'GET',
-                url: 'http://127.0.0.1:8000/api/v1/cases/general-stats'
+                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/general-stats'
             }).then(data => {
                 const { total_cases, death_cases, recovery_cases } = data.data.data;
                 $scope.death_cases = death_cases
@@ -270,7 +270,7 @@
         $scope.getCountries = () => {
             $http({
                 method: 'GET',
-                url: 'http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000'
+                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000'
             }).then((res) => {
                 $scope.countries = res.data.data.rows
             })
@@ -279,7 +279,7 @@
         $scope.searchCountries = () => {
             $http({
                 method: 'GET',
-                url: `http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
+                url: `https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
             }).then((res) => {
                 $scope.countries = res.data.data.rows
             })
