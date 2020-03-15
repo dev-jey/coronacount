@@ -1,15 +1,18 @@
-@import url("https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
-
+@import url("https://fonts.googleapis.com/css?family=Sansita&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 * {
   margin: 0;
   padding: 0;
-  font-family: "Baloo Chettan 2", cursive;
-  background-color: #001a03;
-  background-image: url("https://www.transparenttextures.com/patterns/beige-paper.png");
-}
+  font-family: "Raleway", sans-serif;
+  box-sizing: border-box;
+ }
 
 body {
+  background-color: #000000; background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3), 
+  rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.1)
+  ), url("../images/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
   padding: 1rem;
 }
 
@@ -18,10 +21,43 @@ section {
   color: rgb(207, 207, 207);
 }
 h1 {
-text-align: center;
+  text-align: center;
   font-size: 4rem;
-  font-family: "Roboto Condensed", sans-serif;
   height: 200px;
+}
+
+.title-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 0.5rem;
+  &__head {
+    display: grid;
+    font-family: Sansita;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 2rem;
+    color: #fff;
+    height: 100px;
+  }
+  &__button {
+    color: #000;
+    font-size: 1rem;
+    font-size: 14px;
+    display: grid;
+    background: rgb(255, 255, 255);
+    justify-content: center;
+    padding: 1rem;
+    cursor: pointer;
+    &-bg {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      right: 0;
+      width: 100px;
+      z-index: -1;
+      position: fixed;
+    }
+  }
 }
 
 .section {
@@ -29,25 +65,61 @@ text-align: center;
   grid-template-columns: 1fr;
   height: calc(100vh - 145px);
   &-map {
-    background: rgba(214, 214, 214, 0.5);
-    color: rgb(52, 73, 52);
-    display: grid;
-    place-items: center;
-    padding: 1rem;
+    display: none;
   }
   &-stats {
     display: grid;
     grid-template-rows: repeat(1fr);
     gap: 1rem;
     place-items: center;
-    &__holder{
-        color: rgb(184, 184, 184);
+    &__holder {
+      color: rgb(255, 255, 255);
+      font-size: 1.2rem;
+      font-weight: bolder;
+      p {
+        color: 1rem;
+      }
+      &-deaths {
+        p {
+          color: red;
+        }
+        background: radial-gradient(
+          50% 50% at 50% 50%,
+          rgba(255, 0, 0, 0.33) 26.04%,
+          rgba(240, 181, 181, 0) 48.44%,
+          rgba(254, 0, 0, 0) 75%,
+          rgba(255, 160, 160, 0) 99.98%
+        );
+      }
+      &-survivors {
+        p {
+          color: rgb(0, 255, 0);
+        }
+        background: radial-gradient(
+          50% 50% at 50% 50%,
+          rgba(125, 242, 179, 0.33) 26.56%,
+          rgba(181, 240, 201, 0) 48.44%,
+          rgba(81, 254, 0, 0) 75%,
+          rgba(160, 255, 187, 0) 99.98%
+        );
+      }
+      &-cases {
+        p {
+          color: rgb(14, 255, 255);
+        }
+        background: radial-gradient(
+          50% 50% at 50% 50%,
+          rgba(125, 144, 242, 0.33) 29.17%,
+          rgba(181, 205, 240, 0) 48.44%,
+          rgba(0, 41, 254, 0) 75%,
+          rgba(160, 181, 255, 0) 99.98%
+        );
+      }
     }
     .counter {
       width: 100%;
       display: grid;
-      font-size: 4rem;
-      font-family: "Roboto Condensed", sans-serif;
+      font-size: 2rem;
       place-items: center;
       height: 100%;
       text-align: center;
@@ -61,13 +133,195 @@ text-align: center;
   }
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  // overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.9);
+  &-body {
+    margin-top: 10.5rem;
+    &__search {
+      background: rgba(255, 255, 255, 0.95);
+      top: 0;
+      position: sticky;
+      height: 52.21px;
+      margin: auto;
+      input {
+        width: 100%;
+        margin: auto;
+        height: 52.21px;
+        font-family: Sansita;
+        height: 100%;
+        text-align: center;
+        background: rgb(255, 255, 255);
+        box-shadow: 0px 0px 10px rgb(116, 116, 116);
+        font-size: 1rem;
+        line-height: 22px;
+        border: none;
+        outline: none;
+        color: rgb(7, 7, 7);
+        ::placeholder {
+          color: #636363;
+        }
+      }
+    }
+    &__countries {
+      margin-top: 1.5rem;
+      //Remove
+      height: calc(100vh - 1.5rem);
+      background: #191a1a;
+      overflow: auto;
+      &-country {
+        width: 100%;
+        margin-bottom: 1.8rem;
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      &-img{
+        display: grid;
+        place-items: center;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+        @media screen and (max-width: 768px){
+          img{
+            display: none;
+          }
+        }
+      }
+      &-stats {
+        // width: 100%;
+        background-size: contain;
+        padding: 1rem;
+        .title {
+          font-style: normal;
+          font-weight: bold;
+          font-size: 24px;
+          line-height: 27px;
+          color: #000;
+        }
+        .line {
+          background-image: linear-gradient(to right, rgb(224, 224, 224), rgb(119, 119, 119), rgb(224, 224, 224));
+          height: 0.2rem;
+          width: 100%;
+          margin-top: 0.5rem;
+          margin-bottom: 0.3rem;
+        }
+        .numbers {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 20px;
+          font-weight: bolder;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+          .deaths{
+            color: red;
+          }
+          .recoveries{
+            color: green;
+            text-align: center;
+          }
+          .cases{
+            color: #000;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: inherit;
+  border: none;
+  height: 100%;
+  margin: auto;
+  padding: 0;
+  width: 95%;
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+  overflow: auto;
+}
+
+/* The Close Button */
+.close {
+  color: rgb(255, 20, 20);
+  float: right;
+  font-size: 38px;
+  font-weight: bold;
+  width: 50px;
+  height: 50px;
+  background: rgb(216, 216, 216);
+  text-align: center;
+}
+
+.close:hover,
+.close:focus {
+  color: rgb(255, 163, 163);
+  text-decoration: none;
+  cursor: pointer;
+}
+/* Add Animation */
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
 @media screen and (min-width: 768px) {
   h1 {
-      text-align: left;
+    text-align: left;
     height: 120px;
+  }
+
+  .title-bar {
+    grid-template-columns: repeat(3, 1fr);
+    &__head {
+      font-size: 36px;
+    }
+
+    &__button {
+      justify-content: right;
+      background: inherit;
+      color: #fff;
+    }
   }
   .section {
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
+    grid-template-columns: 2.5fr 0.5fr;
+    justify-content: right;
+    &-map {
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      min-height: 250px;
+    }
+    &-stats {
+      display: grid;
+      max-width: 238px;
+      height: 85%;
+    }
+  }
+  .modal-content {
+    width: 60%;
+  }
+  .modal-body__countries-country{
+    grid-template-columns: .5fr 3fr;
   }
 }

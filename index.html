@@ -14,34 +14,87 @@
 </head>
 
 <body>
-        <h1>
-        CORONA VIRUS STATISTICS
-        </h1>    
+    <div class="title-bar">
+        <h1 class="title-bar__head">
+            CORONA TRACKER
+        </h1>
+        <div></div>
+        <img src="./images/right.svg" alt="" class="title-bar__button-bg">
+        <div class="title-bar__button" id="myBtn">
+            VIEW BY COUNTRIES
+        </div>
+    </div>
     <section class="section">
         <div class="section-map">
-                The coronavirus COVID-19 is affecting 125 countries and territories around the world.
         </div>
         <aside class="section-stats">
-            <div class="section-stats__holder">
-                <div class="counter" data-target="500">
-                    0
-                </div>
+            <div class="section-stats__holder section-stats__holder-deaths">
                 <p>Deaths</p>
-            </div>
-            <div class="section-stats__holder">
-                <div class="counter" data-target="9000">
+                <div class="counter counter-deaths" id="counter-deaths" data-target="500">
                     0
                 </div>
+            </div>
+            <div class="section-stats__holder section-stats__holder-cases">
                 <p>Cases</p>
-            </div>
-            <div class="section-stats__holder">
-                <div class="counter" data-target="100">
+                <div class="counter counter-cases" id="counter-cases" data-target="9000">
                     0
                 </div>
-                <p>Survivors</p>
+            </div>
+            <div class="section-stats__holder section-stats__holder-survivors">
+                <p>Recoveries</p>
+                <div class="counter counter-survivors" id="counter-survivors" data-target="100">
+                    0
+                </div>
             </div>
         </aside>
     </section>
+
+
+
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body__search">
+                    <input type="text" placeholder="SEARCH BY COUNTRY">
+                </div>
+                <div class="modal-body__countries">
+                    <div class="modal-body__countries-country" id="country">
+                        <div class="modal-body__countries-img">
+                            <img src="./images/flags/america.webp" alt="">
+                        </div>
+                        <div class="modal-body__countries-stats"
+                            style="
+                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('../images/flags/america.webp');">
+                            <div class="title" id="country-title">China</div>
+                            <div class="line"></div>
+                            <div class="numbers">
+                                <span class="deaths" id="country-deaths">
+                                    <b>Deaths: 2000</b>
+                                </span>
+                                <span class="recoveries" id="country-recoveries">
+                                    <b>Recoveries: 1200</b>
+                                </span>
+                                <span class="cases" id="country-cases">
+                                    <b>Cases: 2500</b>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+
+
 </body>
 <script>
 
@@ -56,8 +109,6 @@
             const inc = target / speed;
             if (count < target) {
                 counter.innerHTML = Math.ceil(count + inc);
-
-                console.log(counter.innerHTML)
                 setTimeout(updateCount, 1);
             } else {
                 count.innerHTML = target;
@@ -66,6 +117,84 @@
 
         updateCount();
     })
+
+
+
+
+    //open modal
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    function getStats() {
+        fetch('http://127.0.0.1:8000/api/v1/cases/general-stats')
+            .then(function (res) {
+                return res.json();
+            })
+            .then(data => {
+                const { total_cases, death_cases, recovery_cases } = data.data;
+                document.getElementById('counter-deaths').dataset.target = death_cases
+                document.getElementById('counter-cases').dataset.target = total_cases
+                document.getElementById('counter-survivors').dataset.target = recovery_cases
+            })
+
+            .catch(err => console.log(err));
+    }
+
+    function countryData(){
+        fetch('http://127.0.0.1:8000/api/v1/cases/countries-search')
+            .then(function (res) {
+                return res.json();
+            })
+            .then(data => {
+                // var div = document.getElementById("country");
+                data.data.rows.forEach(country=> {
+                    // var span = document.createElement("span");
+                    // span.setAttribute("class", "deaths");
+                    // span.innerHTML=  `Total Deaths: ${country.total_deaths}`
+                    // div.appendChild(span)
+
+                    document.getElementById('country-title').innerHTML = country.country
+                    document.getElementById('country-cases').innerHTML = `Cases: ${country.total_cases}`
+                    document.getElementById('country-recoveries').innerHTML = `Recovered: ${country.total_recovered}`
+                    document.getElementById('country-deaths').innerHTML = `Total Deaths: ${country.total_deaths}`
+
+                })
+            })
+
+            .catch(err => console.log(err));
+    }
+
+    
+
+    countryData()
+
+
+    getStats()
 
 
 </script>
