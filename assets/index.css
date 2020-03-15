@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Sansita&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Nunito&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -9,9 +10,7 @@
 }
 
 body {
-  background-color: #000000;
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.3)), color-stop(rgba(0, 0, 0, 0.4)), color-stop(rgba(0, 0, 0, 0.6)), to(rgba(255, 255, 255, 0.1))), url("../images/background.png");
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.1)), url("../images/background.png");
+  background: #333333;
   background-repeat: no-repeat;
   background-size: cover;
   padding: 1rem;
@@ -34,6 +33,8 @@ h1 {
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr;
   padding: 0.5rem;
+  z-index: 1;
+  position: relative;
 }
 
 .title-bar__head {
@@ -48,12 +49,12 @@ h1 {
 }
 
 .title-bar__button {
-  color: #000;
+  color: white;
   font-size: 1rem;
   font-size: 14px;
   display: -ms-grid;
   display: grid;
-  background: white;
+  background: #8a8a8a;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -86,6 +87,7 @@ h1 {
 .section-stats {
   display: -ms-grid;
   display: grid;
+  font-family: 'Nunito', sans-serif;
   -ms-grid-rows: ()[1fr];
       grid-template-rows: repeat(1fr);
   gap: 1rem;
@@ -93,6 +95,8 @@ h1 {
 }
 
 .section-stats__holder {
+  z-index: 1;
+  position: relative;
   color: white;
   font-size: 1.2rem;
   font-weight: bolder;
@@ -151,7 +155,7 @@ h1 {
   width: 100%;
   height: 100%;
   background-color: black;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .modal-body {
@@ -202,7 +206,6 @@ h1 {
 
 .modal-body__countries {
   margin-top: 1.5rem;
-  height: calc(100vh - 1.5rem);
   background: #191a1a;
   overflow: auto;
 }
@@ -283,6 +286,16 @@ h1 {
   text-align: right;
 }
 
+.modal-body__error {
+  color: red;
+  margin: auto;
+  width: 100%;
+  height: 100px;
+  padding: 2rem;
+  font-weight: bolder;
+  margin-bottom: 0rem;
+}
+
 /* Modal Content */
 .modal-content {
   position: relative;
@@ -301,13 +314,17 @@ h1 {
 
 /* The Close Button */
 .close {
+  position: absolute;
+  right: 0;
+  -webkit-box-shadow: 0px 0px 5px silver;
+          box-shadow: 0px 0px 5px silver;
   color: #ff1414;
   float: right;
   font-size: 38px;
   font-weight: bold;
   width: 50px;
   height: 50px;
-  background: #d8d8d8;
+  background: white;
   text-align: center;
 }
 
@@ -388,5 +405,16 @@ h1 {
     -ms-grid-columns: .5fr 3fr;
         grid-template-columns: .5fr 3fr;
   }
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 /*# sourceMappingURL=index.css.map */

@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Sansita&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -8,9 +10,7 @@
  }
 
 body {
-  background-color: #000000; background-image: linear-gradient(to right, rgba(0, 0, 0, 0.3), 
-  rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.1)
-  ), url("../images/background.png");
+  background: rgb(51, 51, 51);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 1rem;
@@ -30,6 +30,8 @@ h1 {
   display: grid;
   grid-template-columns: 1fr;
   padding: 0.5rem;
+  z-index: 1;
+  position: relative;
   &__head {
     display: grid;
     font-family: Sansita;
@@ -40,11 +42,11 @@ h1 {
     height: 100px;
   }
   &__button {
-    color: #000;
+    color: rgb(255, 255, 255);
     font-size: 1rem;
     font-size: 14px;
     display: grid;
-    background: rgb(255, 255, 255);
+    background: rgb(138, 138, 138);
     justify-content: center;
     padding: 1rem;
     cursor: pointer;
@@ -69,10 +71,14 @@ h1 {
   }
   &-stats {
     display: grid;
+    font-family: 'Nunito', sans-serif;
     grid-template-rows: repeat(1fr);
     gap: 1rem;
     place-items: center;
     &__holder {
+
+  z-index: 1;
+  position: relative;
       color: rgb(255, 255, 255);
       font-size: 1.2rem;
       font-weight: bolder;
@@ -143,7 +149,7 @@ h1 {
   height: 100%;
   // overflow: auto;
   background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.2);
   &-body {
     margin-top: 10.5rem;
     &__search {
@@ -171,10 +177,10 @@ h1 {
         }
       }
     }
+
     &__countries {
       margin-top: 1.5rem;
       //Remove
-      height: calc(100vh - 1.5rem);
       background: #191a1a;
       overflow: auto;
       &-country {
@@ -238,6 +244,16 @@ h1 {
         }
       }
     }
+
+    &__error{
+      color: red;
+      margin: auto;
+      width: 100%;
+      height: 100px;
+      padding: 2rem;
+      font-weight: bolder;
+      margin-bottom: 0rem;
+    }
   }
 }
 /* Modal Content */
@@ -256,13 +272,16 @@ h1 {
 
 /* The Close Button */
 .close {
+  position: absolute;
+  right: 0;
+  box-shadow: 0px 0px 5px silver;
   color: rgb(255, 20, 20);
   float: right;
   font-size: 38px;
   font-weight: bold;
   width: 50px;
   height: 50px;
-  background: rgb(216, 216, 216);
+  background: rgb(255, 255, 255);
   text-align: center;
 }
 
@@ -324,4 +343,16 @@ h1 {
   .modal-body__countries-country{
     grid-template-columns: .5fr 3fr;
   }
+}
+
+
+#map{
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

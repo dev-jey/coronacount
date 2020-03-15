@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <!-- Microdata markup added by Google Structured Data Markup Helper. -->
-<html lang="en">
+<html lang="en" ng-app="coronaApp">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
     <meta name="description"
         content="Access all the latest and updated corona virus/Covid-19 statistics from China and the rest of the world." />
     <link rel="icon" href="../coronacount/images/icon.ico" />
@@ -13,7 +15,8 @@
     <link rel="stylesheet" href="./assets/index.css">
 </head>
 
-<body>
+<body ng-controller="coronaController">
+    <div id="map"></div>
     <div class="title-bar">
         <h1 class="title-bar__head">
             CORONA TRACKER
@@ -30,20 +33,20 @@
         <aside class="section-stats">
             <div class="section-stats__holder section-stats__holder-deaths">
                 <p>Deaths</p>
-                <div class="counter counter-deaths" id="counter-deaths" data-target="500">
-                    0
+                <div class="counter counter-deaths" id="counter-deaths" data-target="0">
+                    {{death_cases}}
                 </div>
             </div>
             <div class="section-stats__holder section-stats__holder-cases">
                 <p>Cases</p>
-                <div class="counter counter-cases" id="counter-cases" data-target="9000">
-                    0
+                <div class="counter counter-cases" id="counter-cases" data-target="0">
+                    {{total_cases}}
                 </div>
             </div>
             <div class="section-stats__holder section-stats__holder-survivors">
                 <p>Recoveries</p>
-                <div class="counter counter-survivors" id="counter-survivors" data-target="100">
-                    0
+                <div class="counter counter-survivors" id="counter-survivors" data-target="0">
+                    {{recovery_cases}}
                 </div>
             </div>
         </aside>
@@ -61,27 +64,33 @@
             </div>
             <div class="modal-body">
                 <div class="modal-body__search">
-                    <input type="text" placeholder="SEARCH BY COUNTRY">
+                    <input type="text" placeholder="SEARCH BY COUNTRY" ng-model="param" ng-change="searchCountries()">
                 </div>
                 <div class="modal-body__countries">
-                    <div class="modal-body__countries-country" id="country">
+                    <div class="modal-body__error" ng-show="countries.length === 0"
+                        style="width: 100%;
+                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('../images/flags/america.webp');">
+                        <div class="title" id="country-title">Country not found!</div>
+                    </div>
+                    <div class="modal-body__countries-country" id="country" ng-repeat="country in countries"
+                        ng-show="countries.length > 0">
                         <div class="modal-body__countries-img">
                             <img src="./images/flags/america.webp" alt="">
                         </div>
                         <div class="modal-body__countries-stats"
                             style="
                         background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('../images/flags/america.webp');">
-                            <div class="title" id="country-title">China</div>
+                            <div class="title" id="country-title">{{country.country}}</div>
                             <div class="line"></div>
                             <div class="numbers">
                                 <span class="deaths" id="country-deaths">
-                                    <b>Deaths: 2000</b>
+                                    <b>Deaths: {{country.total_deaths}}</b>
                                 </span>
                                 <span class="recoveries" id="country-recoveries">
-                                    <b>Recoveries: 1200</b>
+                                    <b>Recoveries: {{country.total_recovered}}</b>
                                 </span>
                                 <span class="cases" id="country-cases">
-                                    <b>Cases: 2500</b>
+                                    <b>Cases: {{country.total_cases}}</b>
                                 </span>
                             </div>
                         </div>
@@ -96,6 +105,8 @@
 
 
 </body>
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
 <script>
 
     const counters = document.querySelectorAll('.counter');
@@ -150,53 +161,132 @@
     }
 
 
-    function getStats() {
-        fetch('http://127.0.0.1:8000/api/v1/cases/general-stats')
-            .then(function (res) {
-                return res.json();
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic2F2YWxpa2l0dWt1IiwiYSI6ImNrMjIxczBhMzA3bWMzY3Fvc2RydzQxd3UifQ.hNGtZUh5syY9E684sH54bg';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v10',
+        center: [-99.9, 41.5],
+        zoom: 1
+    });
+
+    // Join local JSON data with vector tile geometry
+    // USA unemployment rate in 2009
+    // Source https://data.bls.gov/timeseries/LNS14000000
+    var maxValue = 13;
+    var data = [
+        { 'STATE_ID': '01', 'unemployment': 13.17 },
+        { 'STATE_ID': '02', 'unemployment': 9.5 },
+        { 'STATE_ID': '04', 'unemployment': 12.15 },
+        { 'STATE_ID': '05', 'unemployment': 8.99 },
+        { 'STATE_ID': '06', 'unemployment': 11.83 },
+        { 'STATE_ID': '08', 'unemployment': 7.52 },
+        { 'STATE_ID': '09', 'unemployment': 6.44 },
+        { 'STATE_ID': '10', 'unemployment': 5.17 },
+        { 'STATE_ID': '12', 'unemployment': 9.67 },
+        { 'STATE_ID': '13', 'unemployment': 10.64 },
+        { 'STATE_ID': '15', 'unemployment': 12.38 },
+        { 'STATE_ID': '16', 'unemployment': 10.13 },
+        { 'STATE_ID': '17', 'unemployment': 9.58 },
+        { 'STATE_ID': '18', 'unemployment': 10.63 },
+        { 'STATE_ID': '19', 'unemployment': 8.09 },
+        { 'STATE_ID': '20', 'unemployment': 5.93 },
+        { 'STATE_ID': '21', 'unemployment': 9.86 },
+        { 'STATE_ID': '22', 'unemployment': 9.81 },
+        { 'STATE_ID': '23', 'unemployment': 7.82 },
+        { 'STATE_ID': '24', 'unemployment': 8.35 },
+        { 'STATE_ID': '25', 'unemployment': 9.1 },
+        { 'STATE_ID': '26', 'unemployment': 10.69 },
+        { 'STATE_ID': '27', 'unemployment': 11.53 },
+        { 'STATE_ID': '28', 'unemployment': 9.29 },
+        { 'STATE_ID': '29', 'unemployment': 9.94 },
+        { 'STATE_ID': '30', 'unemployment': 9.29 },
+        { 'STATE_ID': '31', 'unemployment': 5.45 },
+        { 'STATE_ID': '32', 'unemployment': 4.21 },
+        { 'STATE_ID': '33', 'unemployment': 4.27 },
+        { 'STATE_ID': '34', 'unemployment': 4.09 },
+        { 'STATE_ID': '35', 'unemployment': 7.83 },
+        { 'STATE_ID': '36', 'unemployment': 8.01 },
+        { 'STATE_ID': '37', 'unemployment': 9.34 },
+        { 'STATE_ID': '38', 'unemployment': 11.23 },
+        { 'STATE_ID': '39', 'unemployment': 7.08 },
+        { 'STATE_ID': '40', 'unemployment': 11.22 },
+        { 'STATE_ID': '41', 'unemployment': 6.2 },
+        { 'STATE_ID': '42', 'unemployment': 9.11 },
+        { 'STATE_ID': '44', 'unemployment': 10.42 },
+        { 'STATE_ID': '45', 'unemployment': 8.89 },
+        { 'STATE_ID': '46', 'unemployment': 11.03 },
+        { 'STATE_ID': '47', 'unemployment': 7.35 },
+        { 'STATE_ID': '48', 'unemployment': 8.92 },
+        { 'STATE_ID': '49', 'unemployment': 7.65 },
+        { 'STATE_ID': '50', 'unemployment': 8.01 },
+        { 'STATE_ID': '51', 'unemployment': 7.62 },
+        { 'STATE_ID': '53', 'unemployment': 7.77 },
+        { 'STATE_ID': '54', 'unemployment': 8.49 },
+        { 'STATE_ID': '55', 'unemployment': 9.42 },
+        { 'STATE_ID': '56', 'unemployment': 7.59 }
+    ];
+
+    map.on('load', function () {
+        // Add layer from the vector tile source with data-driven style
+        map.addLayer(
+            {
+                'id': 'states-join',
+                'type': 'fill',
+                type: 'geojson',
+                data: data,
+                paint: {
+                    'circle-radius': 5,
+                    'circle-color': '#6c0284'
+                }
+            },
+            'waterway-label'
+        );
+    });
+
+
+
+
+
+
+
+
+
+    angular.module('coronaApp', []).controller('coronaController', ($scope, $http) => {
+        $scope.getStats = () => {
+            $http({
+                method: 'GET',
+                url: 'http://127.0.0.1:8000/api/v1/cases/general-stats'
+            }).then(data => {
+                const { total_cases, death_cases, recovery_cases } = data.data.data;
+                $scope.death_cases = death_cases
+                $scope.total_cases = total_cases
+                $scope.recovery_cases = recovery_cases
             })
-            .then(data => {
-                const { total_cases, death_cases, recovery_cases } = data.data;
-                document.getElementById('counter-deaths').dataset.target = death_cases
-                document.getElementById('counter-cases').dataset.target = total_cases
-                document.getElementById('counter-survivors').dataset.target = recovery_cases
+
+                .catch(err => console.log(err));
+        }
+        $scope.getStats()
+        $scope.getCountries = () => {
+            $http({
+                method: 'GET',
+                url: 'http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000'
+            }).then((res) => {
+                $scope.countries = res.data.data.rows
             })
+        }
 
-            .catch(err => console.log(err));
-    }
-
-    function countryData(){
-        fetch('http://127.0.0.1:8000/api/v1/cases/countries-search')
-            .then(function (res) {
-                return res.json();
+        $scope.searchCountries = () => {
+            $http({
+                method: 'GET',
+                url: `http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
+            }).then((res) => {
+                $scope.countries = res.data.data.rows
             })
-            .then(data => {
-                // var div = document.getElementById("country");
-                data.data.rows.forEach(country=> {
-                    // var span = document.createElement("span");
-                    // span.setAttribute("class", "deaths");
-                    // span.innerHTML=  `Total Deaths: ${country.total_deaths}`
-                    // div.appendChild(span)
+        }
 
-                    document.getElementById('country-title').innerHTML = country.country
-                    document.getElementById('country-cases').innerHTML = `Cases: ${country.total_cases}`
-                    document.getElementById('country-recoveries').innerHTML = `Recovered: ${country.total_recovered}`
-                    document.getElementById('country-deaths').innerHTML = `Total Deaths: ${country.total_deaths}`
-
-                })
-            })
-
-            .catch(err => console.log(err));
-    }
-
-    
-
-    countryData()
-
-
-    getStats()
-
-
+        $scope.getCountries();
+    })
 </script>
 
 </html>
