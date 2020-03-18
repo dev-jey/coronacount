@@ -1,13 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Sansita&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
-@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Nunito&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   font-family: "Raleway", sans-serif;
   box-sizing: border-box;
- }
+}
 
 body {
   background: rgb(51, 51, 51);
@@ -46,10 +46,9 @@ h1 {
     font-size: 1rem;
     font-size: 14px;
     display: grid;
-    background: rgb(138, 138, 138);
     justify-content: center;
-    padding: 1rem;
-    cursor: pointer;
+    // padding: .rem;
+    z-index: inherit;
     &-bg {
       position: absolute;
       cursor: pointer;
@@ -65,20 +64,24 @@ h1 {
 .section {
   display: grid;
   grid-template-columns: 1fr;
-  height: calc(100vh - 145px);
+  height: calc(100%);
   &-map {
     display: none;
   }
   &-stats {
     display: grid;
-    font-family: 'Nunito', sans-serif;
+    font-family: "Nunito", sans-serif;
     grid-template-rows: repeat(1fr);
     gap: 1rem;
     place-items: center;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    background: rgba(54, 54, 54, 0.5);
+    z-index: 100;
+    border-radius: 10px;
     &__holder {
-
-  z-index: 1;
-  position: relative;
+      z-index: 1;
+      position: relative;
       color: rgb(255, 255, 255);
       font-size: 1.2rem;
       font-weight: bolder;
@@ -125,7 +128,6 @@ h1 {
     .counter {
       width: 100%;
       display: grid;
-      font-size: 2rem;
       place-items: center;
       height: 100%;
       text-align: center;
@@ -148,8 +150,9 @@ h1 {
   width: 100%;
   height: 100%;
   // overflow: auto;
+  z-index: 1000000;
   background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.8);
   &-body {
     margin-top: 10.5rem;
     &__search {
@@ -189,15 +192,15 @@ h1 {
         display: grid;
         grid-template-columns: 1fr;
       }
-      &-img{
+      &-img {
         display: grid;
         place-items: center;
-        img{
+        img {
           width: 100%;
           height: 100%;
         }
-        @media screen and (max-width: 768px){
-          img{
+        @media screen and (max-width: 768px) {
+          img {
             display: none;
           }
         }
@@ -230,14 +233,14 @@ h1 {
           font-weight: bolder;
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-          .deaths{
+          .deaths {
             color: red;
           }
-          .recoveries{
+          .recoveries {
             color: green;
             text-align: center;
           }
-          .cases{
+          .cases {
             color: #000;
             text-align: right;
           }
@@ -245,7 +248,7 @@ h1 {
       }
     }
 
-    &__error{
+    &__error {
       color: red;
       margin: auto;
       width: 100%;
@@ -255,6 +258,53 @@ h1 {
       margin-bottom: 0rem;
     }
   }
+}
+
+button {
+  position: relative;
+  //display:block;
+  height: 50px;
+  width: 210px;
+  margin: 10px 7px;
+  padding: 5px 5px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: #383736;
+  border: 2px #383736 solid;
+  border-radius: 4px;
+  text-transform: uppercase;
+  color: #fff;
+  outline: 0;
+  overflow: hidden;
+  background: none;
+  z-index: 1;
+  cursor: pointer;
+  transition: 0.08s ease-in;
+  -o-transition: 0.08s ease-in;
+  -ms-transition: 0.08s ease-in;
+  -moz-transition: 0.08s ease-in;
+  -webkit-transition: 0.08s ease-in;
+}
+
+.fill:hover {
+  color: rgb(24, 24, 24);
+}
+
+.fill:before {
+  content: "";
+  position: absolute;
+  background: #f3f3f3;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: -1;
+  -webkit-transition: top .2s ease-in;
+}
+
+.fill:hover:before {
+  top: 0;
 }
 /* Modal Content */
 .modal-content {
@@ -325,6 +375,7 @@ h1 {
     display: grid;
     grid-template-columns: 2.5fr 0.5fr;
     justify-content: right;
+    height: calc(100vh - 145px);
     &-map {
       display: grid;
       place-items: center;
@@ -340,13 +391,12 @@ h1 {
   .modal-content {
     width: 60%;
   }
-  .modal-body__countries-country{
-    grid-template-columns: .5fr 3fr;
+  .modal-body__countries-country {
+    grid-template-columns: 0.5fr 3fr;
   }
 }
 
-
-#map{
+#map {
   width: 100vw;
   height: 100vh;
   margin: 0;

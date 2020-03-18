@@ -23,8 +23,8 @@
         </h1>
         <div></div>
         <img src="./images/right.svg" alt="" class="title-bar__button-bg">
-        <div class="title-bar__button" id="myBtn">
-            VIEW BY COUNTRIES
+        <div class="title-bar__button">
+            <button id="myBtn" class="fill">VIEW BY COUNTRIES</button>
         </div>
     </div>
     <section class="section">
@@ -32,19 +32,19 @@
         </div>
         <aside class="section-stats">
             <div class="section-stats__holder section-stats__holder-deaths">
-                <p>Deaths</p>
+                <p>Total Deaths</p>
                 <div class="counter counter-deaths" id="counter-deaths" data-target="0">
                     {{death_cases}}
                 </div>
             </div>
             <div class="section-stats__holder section-stats__holder-cases">
-                <p>Cases</p>
+                <p>Total Cases</p>
                 <div class="counter counter-cases" id="counter-cases" data-target="0">
                     {{total_cases}}
                 </div>
             </div>
             <div class="section-stats__holder section-stats__holder-survivors">
-                <p>Recoveries</p>
+                <p>Total Recoveries</p>
                 <div class="counter counter-survivors" id="counter-survivors" data-target="0">
                     {{recovery_cases}}
                 </div>
@@ -69,17 +69,17 @@
                 <div class="modal-body__countries">
                     <div class="modal-body__error" ng-show="countries.length === 0"
                         style="width: 100%;
-                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('../images/flags/america.webp');">
+                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url({{country.flag}});">
                         <div class="title" id="country-title">Country not found!</div>
                     </div>
                     <div class="modal-body__countries-country" id="country" ng-repeat="country in countries"
                         ng-show="countries.length > 0">
                         <div class="modal-body__countries-img">
-                            <img src="./images/flags/america.webp" alt="">
+                            <img src="{{country.flag}}" alt="">
                         </div>
                         <div class="modal-body__countries-stats"
                             style="
-                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('../images/flags/america.webp');">
+                        background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url({{country.flag}});">
                             <div class="title" id="country-title">{{country.country}}</div>
                             <div class="line"></div>
                             <div class="numbers">
@@ -131,7 +131,6 @@
 
 
 
-
     //open modal
 
     // Get the modal
@@ -161,102 +160,96 @@
     }
 
 
-
-    mapboxgl.accessToken = 'pk.eyJ1Ijoic2F2YWxpa2l0dWt1IiwiYSI6ImNrMjIxczBhMzA3bWMzY3Fvc2RydzQxd3UifQ.hNGtZUh5syY9E684sH54bg';
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/dark-v10',
-        center: [-99.9, 41.5],
-        zoom: 1
-    });
-
-    // Join local JSON data with vector tile geometry
-    // USA unemployment rate in 2009
-    // Source https://data.bls.gov/timeseries/LNS14000000
-    var maxValue = 13;
-    var data = [
-        { 'STATE_ID': '01', 'unemployment': 13.17 },
-        { 'STATE_ID': '02', 'unemployment': 9.5 },
-        { 'STATE_ID': '04', 'unemployment': 12.15 },
-        { 'STATE_ID': '05', 'unemployment': 8.99 },
-        { 'STATE_ID': '06', 'unemployment': 11.83 },
-        { 'STATE_ID': '08', 'unemployment': 7.52 },
-        { 'STATE_ID': '09', 'unemployment': 6.44 },
-        { 'STATE_ID': '10', 'unemployment': 5.17 },
-        { 'STATE_ID': '12', 'unemployment': 9.67 },
-        { 'STATE_ID': '13', 'unemployment': 10.64 },
-        { 'STATE_ID': '15', 'unemployment': 12.38 },
-        { 'STATE_ID': '16', 'unemployment': 10.13 },
-        { 'STATE_ID': '17', 'unemployment': 9.58 },
-        { 'STATE_ID': '18', 'unemployment': 10.63 },
-        { 'STATE_ID': '19', 'unemployment': 8.09 },
-        { 'STATE_ID': '20', 'unemployment': 5.93 },
-        { 'STATE_ID': '21', 'unemployment': 9.86 },
-        { 'STATE_ID': '22', 'unemployment': 9.81 },
-        { 'STATE_ID': '23', 'unemployment': 7.82 },
-        { 'STATE_ID': '24', 'unemployment': 8.35 },
-        { 'STATE_ID': '25', 'unemployment': 9.1 },
-        { 'STATE_ID': '26', 'unemployment': 10.69 },
-        { 'STATE_ID': '27', 'unemployment': 11.53 },
-        { 'STATE_ID': '28', 'unemployment': 9.29 },
-        { 'STATE_ID': '29', 'unemployment': 9.94 },
-        { 'STATE_ID': '30', 'unemployment': 9.29 },
-        { 'STATE_ID': '31', 'unemployment': 5.45 },
-        { 'STATE_ID': '32', 'unemployment': 4.21 },
-        { 'STATE_ID': '33', 'unemployment': 4.27 },
-        { 'STATE_ID': '34', 'unemployment': 4.09 },
-        { 'STATE_ID': '35', 'unemployment': 7.83 },
-        { 'STATE_ID': '36', 'unemployment': 8.01 },
-        { 'STATE_ID': '37', 'unemployment': 9.34 },
-        { 'STATE_ID': '38', 'unemployment': 11.23 },
-        { 'STATE_ID': '39', 'unemployment': 7.08 },
-        { 'STATE_ID': '40', 'unemployment': 11.22 },
-        { 'STATE_ID': '41', 'unemployment': 6.2 },
-        { 'STATE_ID': '42', 'unemployment': 9.11 },
-        { 'STATE_ID': '44', 'unemployment': 10.42 },
-        { 'STATE_ID': '45', 'unemployment': 8.89 },
-        { 'STATE_ID': '46', 'unemployment': 11.03 },
-        { 'STATE_ID': '47', 'unemployment': 7.35 },
-        { 'STATE_ID': '48', 'unemployment': 8.92 },
-        { 'STATE_ID': '49', 'unemployment': 7.65 },
-        { 'STATE_ID': '50', 'unemployment': 8.01 },
-        { 'STATE_ID': '51', 'unemployment': 7.62 },
-        { 'STATE_ID': '53', 'unemployment': 7.77 },
-        { 'STATE_ID': '54', 'unemployment': 8.49 },
-        { 'STATE_ID': '55', 'unemployment': 9.42 },
-        { 'STATE_ID': '56', 'unemployment': 7.59 }
-    ];
-
-    map.on('load', function () {
-        // Add layer from the vector tile source with data-driven style
-        map.addLayer(
-            {
-                'id': 'states-join',
-                'type': 'fill',
-                type: 'geojson',
-                data: data,
-                paint: {
-                    'circle-radius': 5,
-                    'circle-color': '#6c0284'
-                }
-            },
-            'waterway-label'
-        );
-    });
-
-
-
-
-
-
-
-
-
     angular.module('coronaApp', []).controller('coronaController', ($scope, $http) => {
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2F2YWxpa2l0dWt1IiwiYSI6ImNrMjIxczBhMzA3bWMzY3Fvc2RydzQxd3UifQ.hNGtZUh5syY9E684sH54bg';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [-79.999732, 40.4374],
+            zoom: 1
+        });
+
+        map.on('load', function () {
+            //On map load, we want to do some stuff
+            map.addLayer({
+                //here we are adding a layer containing the tileset we just uploaded
+                id: 'countries', //this is the name of our layer, which we will need later
+                source: {
+                    type: 'vector',
+                    url: 'mapbox://savalikituku.7bsz6ujr', // <--- Add the Map ID you copied here
+                },
+                'source-layer': 'ne_10m_admin_0_countries-cxnhz2', // <--- Add the source layer name you copied here
+                type: 'fill',
+                paint: {
+                    'fill-color': '#363636', //this is the color you want your tileset to have (I used a nice purple color)
+                    'fill-outline-color': 'grey', //this helps us distinguish individual countries a bit better by giving them an outline
+                    'fill-opacity': 0.2
+                },
+            });
+            map.setPaintProperty(
+                'countries',
+                'vector-opacity',
+                0
+            );
+            map.setFilter('countries', ['in', 'NAME_LONG'].concat([$scope.countries.map((ctr => ctr.total_cases > 1000))]));
+        });
+
+        var popup = new mapboxgl.Popup({
+            closeButton: false
+        });
+        map.on('mousemove', 'countries', function (mapElement) {
+            const countryName = mapElement.features[0].properties.NAME_LONG; // Grab the country code from the map properties.
+            fetch(`https://restcountries.eu/rest/v2/name/${countryName}?fullText=true`) // Using tempalate tags to create the API request
+                .then((data) => data.json()) //fetch returns an object with a .json() method, which returns a promise
+                .then((country) => { //country contains the data from the API request
+                    // Let's build our HTML in a template tag
+                    let total_cases, new_cases, total_deaths, new_deaths, total_recovered, active_cases, serious_critical, cases_per_mill_pop = 0;
+                    $scope.countries.forEach((ctr) => {
+                        if (ctr.country === countryName) {
+                            this.total_cases = ctr.total_cases
+                            this.new_cases = ctr.new_cases
+                            this.total_deaths = ctr.total_deaths
+                            this.new_deaths = ctr.new_deaths
+                            this.total_recovered = ctr.total_recovered
+                            this.active_cases = ctr.active_cases
+                            this.serious_critical = ctr.serious_critical
+                            this.cases_per_mill_pop = ctr.cases_per_mill_pop
+                        }
+                    })
+                    const html = ` 
+        <img src='${country[0].flag}' width="180" /> 
+        <ul>
+          <li style="list-style:none; color: black"><h3><b>${country[0].name}</b></h3></li>
+          <li style="list-style:none; color: grey"><strong>Total Population:</strong> <b>${country[0].population}</b></li>
+          <li style="list-style:none; color: grey"><strong>Total Cases:</strong> <b>${this.total_cases}</b></li>
+          <li style="list-style:none; color: grey"><strong>New Cases:</strong> <b>+${this.new_cases}</b></li>
+          <li style="list-style:none; color: grey"><strong>Total Deaths:</strong> <b>${this.total_deaths}</b></li>
+          <li style="list-style:none; color: grey"><strong>New Deaths:</strong> <b>+${this.new_deaths}</b></li>
+          <li style="list-style:none; color: grey"><strong>Total Recovered:</strong> <b>${this.total_recovered}</b></li>
+          <li style="list-style:none; color: grey"><strong>Active Cases:</strong> <b>${this.active_cases}</b></li>
+          <li style="list-style:none; color: grey"><strong>Serious critical cases:</strong> <b>${this.serious_critical}</b></li>
+          <li style="list-style:none; color: grey"><strong>Cases per million population:</strong> <b>${this.cases_per_mill_pop}%</b></li>
+        </ul>
+      `; // Now we have a good looking popup HTML segment.
+                    popup//Create a new popup
+                        .setLngLat(mapElement.lngLat) // Set where we want it to appear (where we clicked)
+                        .setHTML(html) // Add the HTML we just made to the popup
+                        .addTo(map); // Add the popup to the map
+                });
+        });
+
+        map.on('mousemove', 'countries', function (mapElement) {
+            popup //Create a new popup
+                .remove()
+        });
+
+
+
+
         $scope.getStats = () => {
             $http({
                 method: 'GET',
-                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/general-stats'
+                url: 'http://127.0.0.1:8000/api/v1/cases/general-stats'
             }).then(data => {
                 const { total_cases, death_cases, recovery_cases } = data.data.data;
                 $scope.death_cases = death_cases
@@ -270,7 +263,7 @@
         $scope.getCountries = () => {
             $http({
                 method: 'GET',
-                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000'
+                url: 'http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000'
             }).then((res) => {
                 $scope.countries = res.data.data.rows
             })
@@ -279,7 +272,7 @@
         $scope.searchCountries = () => {
             $http({
                 method: 'GET',
-                url: `https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
+                url: `http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
             }).then((res) => {
                 $scope.countries = res.data.data.rows
             })
