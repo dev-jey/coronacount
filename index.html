@@ -17,6 +17,9 @@
 
 <body ng-controller="coronaController">
     <div id="map"></div>
+    <div class="loader" ng-if="isLoading">
+        <h2 class="animate">Loading</h2>
+    </div>
     <div class="title-bar">
         <h1 class="title-bar__head">
             CORONA TRACKER
@@ -108,29 +111,6 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
 <script>
-
-    const counters = document.querySelectorAll('.counter');
-    const speed = 200;
-
-    counters.forEach(counter => {
-        const updateCount = () => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText;
-
-            const inc = target / speed;
-            if (count < target) {
-                counter.innerHTML = Math.ceil(count + inc);
-                setTimeout(updateCount, 1);
-            } else {
-                count.innerHTML = target;
-            }
-        }
-
-        updateCount();
-    })
-
-
-
     //open modal
 
     // Get the modal
@@ -166,7 +146,8 @@
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v10',
             center: [-79.999732, 40.4374],
-            zoom: 1
+            zoom: 1,
+            maxZoom: 4
         });
 
         map.on('load', function () {
@@ -181,8 +162,8 @@
                 'source-layer': 'ne_10m_admin_0_countries-cxnhz2', // <--- Add the source layer name you copied here
                 type: 'fill',
                 paint: {
-                    'fill-color': '#363636', //this is the color you want your tileset to have (I used a nice purple color)
-                    'fill-outline-color': 'grey', //this helps us distinguish individual countries a bit better by giving them an outline
+                    // 'fill-color': '#696969', //this is the color you want your tileset to have (I used a nice purple color)
+                    // 'fill-outline-color': 'grey', //this helps us distinguish individual countries a bit better by giving them an outline
                     'fill-opacity': 0.2
                 },
             });
@@ -247,38 +228,43 @@
 
 
         $scope.getStats = () => {
+            $scope.isLoading = true;
             $http({
                 method: 'GET',
-                url: 'http://127.0.0.1:8000/api/v1/cases/general-stats'
+                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/general-stats'
             }).then(data => {
                 const { total_cases, death_cases, recovery_cases } = data.data.data;
                 $scope.death_cases = death_cases
                 $scope.total_cases = total_cases
                 $scope.recovery_cases = recovery_cases
+                $scope.isLoading = false;
             })
-
-                .catch(err => console.log(err));
+                .catch(err => this.isLoading = false);
         }
         $scope.getStats()
         $scope.getCountries = () => {
+            $scope.isLoading = true;
             $http({
                 method: 'GET',
-                url: 'http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000'
+                url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000'
             }).then((res) => {
+                $scope.isLoading = false;
                 $scope.countries = res.data.data.rows
             })
+                .catch((err) => this.isLoading = false)
         }
 
         $scope.searchCountries = () => {
             $http({
                 method: 'GET',
-                url: `http://127.0.0.1:8000/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
+                url: `https://corona-virus-stats.herokuapp.com/api/v1/cases/countries-search?limit=1000&search=${$scope.param}`
             }).then((res) => {
                 $scope.countries = res.data.data.rows
             })
         }
 
         $scope.getCountries();
+
     })
 </script>
 
