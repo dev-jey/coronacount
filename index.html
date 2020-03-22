@@ -27,7 +27,7 @@
         <div></div>
         <img src="./images/right.svg" alt="" class="title-bar__button-bg">
         <div class="title-bar__button">
-            <button id="myBtn" class="fill">WORLD WIDE STATISTICS</button>
+            <button id="myBtn" class="fill">MORE STATISTICS</button>
         </div>
     </div>
     <section class="section">
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-body">
                 <div class="modal-body__others">
-                    <h2>More Statistics</h2><br><hr><br>
+                    <h2 style="text-align: center;">WORLD WIDE STATISTICS</h2><br><hr><br>
                     <div>
                         Last Update: {{last_update}}
                     </div>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="modal-body__search">
-                    <input type="text" placeholder="SEARCH BY COUNTRY" ng-model="param" ng-change="searchCountries()">
+                    <input type="text" placeholder="Search by country" ng-model="param" ng-change="searchCountries()">
                 </div>
                 <div class="modal-body__countries">
                     <div class="modal-body__error" ng-show="countries.length === 0"

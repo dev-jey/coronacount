@@ -193,7 +193,7 @@ h1 {
 .modal-body__others {
   width: 100%;
   background: #fff;
-  padding: 1.5rem .85rem;
+  padding: 1.75rem .85rem;
 }
 
 .modal-body__others div {
@@ -214,7 +214,6 @@ h1 {
   width: 100%;
   margin: auto;
   height: 52.21px;
-  font-family: Sansita;
   height: 100%;
   text-align: center;
   background: white;
