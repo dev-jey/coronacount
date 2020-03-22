@@ -147,7 +147,8 @@
             style: 'mapbox://styles/mapbox/dark-v10',
             center: [-79.999732, 40.4374],
             zoom: 1,
-            maxZoom: 4
+            maxZoom: 4,
+            minZoom: 1
         });
 
         map.on('load', function () {
@@ -162,31 +163,56 @@
                 'source-layer': 'ne_10m_admin_0_countries-cxnhz2', // <--- Add the source layer name you copied here
                 type: 'fill',
                 paint: {
-                    // 'fill-color': '#696969', //this is the color you want your tileset to have (I used a nice purple color)
+                    // 'fill-color': "", //this is the color you want your tileset to have (I used a nice purple color)
                     // 'fill-outline-color': 'grey', //this helps us distinguish individual countries a bit better by giving them an outline
                     'fill-opacity': 0.2
                 },
             });
-            map.setPaintProperty(
-                'countries',
-                'vector-opacity',
-                0
-            );
-            map.setFilter('countries', ['in', 'NAME_LONG'].concat([$scope.countries.map((ctr => ctr.total_cases > 1000))]));
+
+            for (i = 0; i < $scope.countries.length; i++) {
+                    map.setPaintProperty('countries', 'fill-color',
+                        [
+                            'interpolate',
+                            ['linear'],
+                            ['>',$scope.countries[i].total_cases, 10],
+                            0,
+                            'yellow',
+                            4,
+                            'red',
+                            750000,
+                            '#E6B71E',
+                            1000000,
+                            '#DA9C20',
+                            2500000,
+                            '#CA8323',
+                            5000000,
+                            '#B86B25',
+                            7500000,
+                            '#A25626',
+                            10000000,
+                            '#8B4225',
+                            25000000,
+                            'blue'
+                        ]
+                    );
+                }
+            
+
+            map.setFilter('countries', ['in', 'ISO_A2'].concat([$scope.countries]));
         });
 
         var popup = new mapboxgl.Popup({
             closeButton: false
         });
         map.on('mousemove', 'countries', function (mapElement) {
-            const countryName = mapElement.features[0].properties.NAME_LONG; // Grab the country code from the map properties.
-            fetch(`https://restcountries.eu/rest/v2/name/${countryName}?fullText=true`) // Using tempalate tags to create the API request
+            const countryCode = mapElement.features[0].properties.ISO_A2; // Grab the country code from the map properties.
+            fetch(`https://restcountries.eu/rest/v2/alpha/${countryCode}`) // Using tempalate tags to create the API request
                 .then((data) => data.json()) //fetch returns an object with a .json() method, which returns a promise
                 .then((country) => { //country contains the data from the API request
                     // Let's build our HTML in a template tag
                     let total_cases, new_cases, total_deaths, new_deaths, total_recovered, active_cases, serious_critical, cases_per_mill_pop = 0;
                     $scope.countries.forEach((ctr) => {
-                        if (ctr.country === countryName) {
+                        if (ctr.country_abbreviation === countryCode) {
                             this.total_cases = ctr.total_cases
                             this.new_cases = ctr.new_cases
                             this.total_deaths = ctr.total_deaths
@@ -198,10 +224,10 @@
                         }
                     })
                     const html = ` 
-        <img src='${country[0].flag}' width="180" /> 
+        <img src='${country ? country.flag: ''}' width="180" /> 
         <ul>
-          <li style="list-style:none; color: black"><h3><b>${country[0].name}</b></h3></li>
-          <li style="list-style:none; color: grey"><strong>Total Population:</strong> <b>${country[0].population}</b></li>
+          <li style="list-style:none; color: black"><h3><b>${country ? country.name: ''}</b></h3></li>
+          <li style="list-style:none; color: grey"><strong>Total Population:</strong> <b>${country ? country.population: ''}</b></li>
           <li style="list-style:none; color: grey"><strong>Total Cases:</strong> <b>${this.total_cases}</b></li>
           <li style="list-style:none; color: grey"><strong>New Cases:</strong> <b>+${this.new_cases}</b></li>
           <li style="list-style:none; color: grey"><strong>Total Deaths:</strong> <b>${this.total_deaths}</b></li>

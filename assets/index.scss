@@ -49,9 +49,13 @@ h1 {
 .title-bar {
   display: grid;
   grid-template-columns: 1fr;
-  padding: 0.5rem;
-  z-index: 1;
-  position: relative;
+  padding: .5rem 2.5rem;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
   &__head {
     display: grid;
     font-family: Sansita;
@@ -77,6 +81,7 @@ h1 {
       width: 100px;
       z-index: -1;
       position: fixed;
+      display: none;
     }
   }
 }
@@ -91,14 +96,18 @@ h1 {
   &-stats {
     display: grid;
     font-family: "Nunito", sans-serif;
-    grid-template-rows: repeat(1fr);
+    grid-template-rows: repeat(.5fr);
     gap: 1rem;
     place-items: center;
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
-    background: rgba(54, 54, 54, 0.5);
+    background: rgba(29, 29, 29, 0.6);
     z-index: 100;
-    border-radius: 10px;
+    margin-top: 170px;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 115px);
     &__holder {
       z-index: 1;
       position: relative;
@@ -151,7 +160,7 @@ h1 {
       place-items: center;
       height: 100%;
       text-align: center;
-      font-size: 4rem;
+      font-size: 2rem;
       font-weight: bolder;
     }
 
@@ -174,7 +183,6 @@ h1 {
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.8);
   &-body {
-    margin-top: 10.5rem;
     &__search {
       background: rgba(255, 255, 255, 0.95);
       top: 0;
@@ -342,7 +350,7 @@ button {
 
 /* The Close Button */
 .close {
-  position: absolute;
+  position: fixed;
   right: 0;
   box-shadow: 0px 0px 5px silver;
   color: rgb(255, 20, 20);
@@ -352,6 +360,7 @@ button {
   width: 50px;
   height: 50px;
   background: rgb(255, 255, 255);
+  z-index: 100000000;
   text-align: center;
 }
 
@@ -437,6 +446,10 @@ text-shadow: 0 0 1px rgb(68, 51, 51);
       justify-content: right;
       background: inherit;
       color: #fff;
+      margin-top: .75rem;
+      &-bg{
+        display: block;
+      }
     }
   }
   .section {
@@ -452,7 +465,12 @@ text-shadow: 0 0 1px rgb(68, 51, 51);
     }
     &-stats {
       display: grid;
-      height: 85%;
+      width: 300px;
+      margin-top: 100px;
+      position: absolute;
+      right: 0 !important;
+      left: calc(100% - 300px);
+      height: calc(100% - 115px);
     }
   }
   .modal-content {
