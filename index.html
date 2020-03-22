@@ -27,19 +27,13 @@
         <div></div>
         <img src="./images/right.svg" alt="" class="title-bar__button-bg">
         <div class="title-bar__button">
-            <button id="myBtn" class="fill">VIEW BY COUNTRIES</button>
+            <button id="myBtn" class="fill">MORE STATISTICS</button>
         </div>
     </div>
     <section class="section">
         <div class="section-map">
         </div>
         <aside class="section-stats">
-            <div class="section-stats__holder section-stats__holder-deaths">
-                <p>Total Deaths</p>
-                <div class="counter counter-deaths" id="counter-deaths" data-target="0">
-                    {{death_cases}}
-                </div>
-            </div>
             <div class="section-stats__holder section-stats__holder-cases">
                 <p>Total Cases</p>
                 <div class="counter counter-cases" id="counter-cases" data-target="0">
@@ -50,6 +44,12 @@
                 <p>Total Recoveries</p>
                 <div class="counter counter-survivors" id="counter-survivors" data-target="0">
                     {{recovery_cases}}
+                </div>
+            </div>
+            <div class="section-stats__holder section-stats__holder-deaths">
+                <p>Total Deaths</p>
+                <div class="counter counter-deaths" id="counter-deaths" data-target="0">
+                    {{death_cases}}
                 </div>
             </div>
         </aside>
@@ -66,6 +66,46 @@
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
+                <div class="modal-body__others">
+                    <h2>More Statistics</h2><br><hr><br>
+                    <div>
+                        Last Update: {{last_update}}
+                    </div>
+                    <div>
+                        Recovered Closed Cases: {{recovered_closed_cases}}
+                    </div>
+                    <div>
+                        General Death Rate: {{general_death_rate}}
+                    </div>
+                    <div>
+                        Death Closed Cases: {{death_closed_cases}}
+                    </div>
+                    <div>
+                        Mild Condition Active Cases: {{mild_condition_active_cases}}
+                    </div>
+                    <div>
+                        Currently Infected: {{currently_infected}}
+                    </div>
+                    <div>
+                        Critical Condition Active Cases: {{critical_condition_active_cases}}
+                    </div>
+                    <div>
+                        Closed Cases Recovered Percentage: {{closed_cases_recovered_percentage}}
+                    </div>
+                    <div>
+                        Closed Cases Death Percentage: {{closed_cases_death_percentage}}
+                    </div>
+                    <div>
+                        Closed With Outcome: {{cases_with_outcome}}
+                    </div>
+
+                    <div>
+                        Active Cases Mild Percentage: {{active_cases_mild_percentage}}
+                    </div>
+                    <div>
+                        Active Cases Critical Percentage: {{active_cases_critical_percentage}}
+                    </div>
+                </div>
                 <div class="modal-body__search">
                     <input type="text" placeholder="SEARCH BY COUNTRY" ng-model="param" ng-change="searchCountries()">
                 </div>
@@ -170,33 +210,33 @@
             });
 
             for (i = 0; i < $scope.countries.length; i++) {
-                    map.setPaintProperty('countries', 'fill-color',
-                        [
-                            'interpolate',
-                            ['linear'],
-                            ['>',$scope.countries[i].total_cases, 10],
-                            0,
-                            'yellow',
-                            4,
-                            'red',
-                            750000,
-                            '#E6B71E',
-                            1000000,
-                            '#DA9C20',
-                            2500000,
-                            '#CA8323',
-                            5000000,
-                            '#B86B25',
-                            7500000,
-                            '#A25626',
-                            10000000,
-                            '#8B4225',
-                            25000000,
-                            'blue'
-                        ]
-                    );
-                }
-            
+                map.setPaintProperty('countries', 'fill-color',
+                    [
+                        'interpolate',
+                        ['linear'],
+                        ['>', $scope.countries[i].total_cases, 10],
+                        0,
+                        'yellow',
+                        4,
+                        'red',
+                        750000,
+                        '#E6B71E',
+                        1000000,
+                        '#DA9C20',
+                        2500000,
+                        '#CA8323',
+                        5000000,
+                        '#B86B25',
+                        7500000,
+                        '#A25626',
+                        10000000,
+                        '#8B4225',
+                        25000000,
+                        'blue'
+                    ]
+                );
+            }
+
 
             map.setFilter('countries', ['in', 'ISO_A2'].concat([$scope.countries]));
         });
@@ -224,10 +264,10 @@
                         }
                     })
                     const html = ` 
-        <img src='${country ? country.flag: ''}' width="180" /> 
+        <img src='${country ? country.flag : ''}' width="180" /> 
         <ul>
-          <li style="list-style:none; color: black"><h3><b>${country ? country.name: ''}</b></h3></li>
-          <li style="list-style:none; color: grey"><strong>Total Population:</strong> <b>${country ? country.population: ''}</b></li>
+          <li style="list-style:none; color: black"><h3><b>${country ? country.name : ''}</b></h3></li>
+          <li style="list-style:none; color: grey"><strong>Total Population:</strong> <b>${country ? country.population : ''}</b></li>
           <li style="list-style:none; color: grey"><strong>Total Cases:</strong> <b>${this.total_cases}</b></li>
           <li style="list-style:none; color: grey"><strong>New Cases:</strong> <b>+${this.new_cases}</b></li>
           <li style="list-style:none; color: grey"><strong>Total Deaths:</strong> <b>${this.total_deaths}</b></li>
@@ -259,10 +299,26 @@
                 method: 'GET',
                 url: 'https://corona-virus-stats.herokuapp.com/api/v1/cases/general-stats'
             }).then(data => {
-                const { total_cases, death_cases, recovery_cases } = data.data.data;
+                const { total_cases, death_cases, recovery_cases, last_update, recovered_closed_cases,
+                    general_death_rate, death_closed_cases, mild_condition_active_cases, currently_infected
+                ,critical_condition_active_cases, closed_cases_recovered_percentage, closed_cases_death_percentage,
+                cases_with_outcome, active_cases_mild_percentage, active_cases_critical_percentage
+                } = data.data.data;
                 $scope.death_cases = death_cases
                 $scope.total_cases = total_cases
                 $scope.recovery_cases = recovery_cases
+                $scope.last_update = last_update
+                $scope.recovered_closed_cases = recovered_closed_cases
+                $scope.general_death_rate = general_death_rate
+                $scope.death_closed_cases = death_closed_cases
+                $scope.mild_condition_active_cases = mild_condition_active_cases
+                $scope.currently_infected = currently_infected
+                $scope.critical_condition_active_cases = critical_condition_active_cases
+                $scope.closed_cases_recovered_percentage = closed_cases_recovered_percentage
+                $scope.closed_cases_death_percentage = closed_cases_death_percentage
+                $scope.cases_with_outcome = cases_with_outcome
+                $scope.active_cases_mild_percentage = active_cases_mild_percentage
+                $scope.active_cases_critical_percentage = active_cases_critical_percentage
                 $scope.isLoading = false;
             })
                 .catch(err => this.isLoading = false);
